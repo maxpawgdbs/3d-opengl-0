@@ -1,7 +1,0 @@
-﻿  main.cpp
-C:\Users\maxim\source\repos\нищий 3д рейкастинг\нищий 3д рейкастинг\main.cpp(138,41): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
-C:\Users\maxim\source\repos\нищий 3д рейкастинг\нищий 3д рейкастинг\main.cpp(138,31): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
-C:\Users\maxim\source\repos\нищий 3д рейкастинг\нищий 3д рейкастинг\main.cpp(138,21): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
-C:\Users\maxim\source\repos\нищий 3д рейкастинг\нищий 3д рейкастинг\main.cpp(140,37): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
-C:\Users\maxim\source\repos\нищий 3д рейкастинг\нищий 3д рейкастинг\main.cpp(140,18): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
-  нищий 3д рейкастинг.vcxproj -> C:\Users\maxim\source\repos\нищий 3д рейкастинг\x64\Debug\нищий 3д рейкастинг.exe
