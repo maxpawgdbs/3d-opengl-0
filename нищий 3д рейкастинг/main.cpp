@@ -41,8 +41,7 @@ double GetMToLight(double x, double y, double z, Coords Camera) {
 		double m1 = sqrt(pow(x1, 2) + pow(y1, 2) + pow(z1, 2));
 		double m2 = sqrt(pow(x2, 2) + pow(y2, 2) + pow(z2, 2));
 		double m = std::min(m1, m2);
-		//std::cout << m << ' ';
-		if (m == m1 && std::round(z1 * 1e4) / 1e4 == std::round(z * 1e4) / 1e4 || m == m2 && std::round(z2 * 1e4) / 1e4 == std::round(z * 1e4) / 1e4) return m;
+		if (m == m1 && std::round(z1 * 1e5) / 1e5 == std::round(z * 1e5) / 1e5 || m == m2 && std::round(z2 * 1e5) / 1e5 == std::round(z * 1e5) / 1e5) return m;
 		else return 1e10;
 
 	}
@@ -75,14 +74,16 @@ int main() {
 		std::cerr << "Failed to initialize GLEW" << std::endl;
 		return -1;
 	}
-	glPointSize(1.0f); // Размер точки — 1 пиксель
-
+	glPointSize(1.0f);
 
 	Coords Camera = { 0.0, 0.0, -2.5 };
 
-	Coords Light = { 5.0, 5.0, 0.0 };
+	Coords Light = { 5.0, 3.0, 0.0 };
 
 	long long TimeFPS = std::chrono::duration_cast<std::chrono::milliseconds>(
+		std::chrono::system_clock::now().time_since_epoch()
+	).count();
+	long long TimeLast = std::chrono::duration_cast<std::chrono::milliseconds>(
 		std::chrono::system_clock::now().time_since_epoch()
 	).count();
 	long long FPS = 0;
@@ -91,8 +92,30 @@ int main() {
 
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
-		//glDrawArrays(GL_POINTS, 0, 1);
 		glBegin(GL_POINTS);
+
+		long long TimeNow = std::chrono::duration_cast<std::chrono::milliseconds>(
+			std::chrono::system_clock::now().time_since_epoch()
+		).count();
+
+		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+			Camera.z += (TimeNow - TimeLast) / 1000.0 * 3;
+		}
+		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+			Camera.z -= (TimeNow - TimeLast) / 1000.0 * 3;
+		}
+		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+			Camera.x -= (TimeNow - TimeLast) / 1000.0 * 3;
+		}
+		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+			Camera.x += (TimeNow - TimeLast) / 1000.0 * 3;
+		}
+		if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
+			Camera.y += (TimeNow - TimeLast) / 1000.0 * 3;
+		}
+		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
+			Camera.y -= (TimeNow - TimeLast) / 1000.0 * 3;
+		}
 
 		for (int y = height / -2; y <= height / 2; y++) {
 			for (int x = width / -2; x <= width / 2; x++) {
@@ -134,7 +157,6 @@ int main() {
 						z2 = z2 + Camera.z;
 						m = GetMToLight(x2, y2, z2, Light);
 					}
-					// std::cout << m << ' ';
 					glColor3f(1.0f / m, 1.0f / m, 1.0f / m);
 				}
 				glVertex2f(x / (width / 2.0), y / (height / 2.0));
@@ -142,16 +164,13 @@ int main() {
 		}
 		glEnd();
 
-		if (std::chrono::duration_cast<std::chrono::milliseconds>(
-			std::chrono::system_clock::now().time_since_epoch()
-		).count() - TimeFPS < 1000) FPS++;
+		if (TimeNow - TimeFPS < 1000) FPS++;
 		else {
 			std::cout << "fps: " << FPS << '\n';
 			FPS = 0;
-			TimeFPS = std::chrono::duration_cast<std::chrono::milliseconds>(
-				std::chrono::system_clock::now().time_since_epoch()
-			).count();
+			TimeFPS = TimeNow;
 		}
+		TimeLast = TimeNow;
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
